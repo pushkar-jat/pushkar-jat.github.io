@@ -29,7 +29,7 @@ function launch_url(url) {
  * copy email to clipboard onclick
  */
 document.querySelector(".email").onclick = function(){
-    copyStringToClipboard(".email", "2017pgicspushkar034@poornima.org");
+    copyStringToClipboard(".email", "dev.pushkarjat@gmail.com");
 };
 
 
