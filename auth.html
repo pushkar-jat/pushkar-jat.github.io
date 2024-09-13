@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript">
+        window.lpTag = window.lpTag || {};
+    
+        if (typeof window.lpTag._tagCount === 'undefined') {
+            window.lpTag = {
+                wl: lpTag.wl || null,
+                scp: lpTag.scp || null,
+                site: '9994318' || '',
+                section: lpTag.section || '',
+                tagletSection: lpTag.tagletSection || null,
+                autoStart: lpTag.autoStart !== false,
+                ovr: lpTag.ovr || {},
+                _v: '1.10.0',
+                _tagCount: 1,
+                protocol: 'https:',
+                events: {
+                    bind: function (t, e, i) {
+                        lpTag.defer(function () {
+                            lpTag.events.bind(t, e, i);
+                        }, 0);
+                    },
+                    trigger: function (t, e, i) {
+                        lpTag.defer(function () {
+                            lpTag.events.trigger(t, e, i);
+                        }, 1);
+                    }
+                },
+                defer: function (t, e) {
+                    if (e === 0) {
+                        this._defB = this._defB || [];
+                        this._defB.push(t);
+                    } else if (e === 1) {
+                        this._defT = this._defT || [];
+                        this._defT.push(t);
+                    } else {
+                        this._defL = this._defL || [];
+                        this._defL.push(t);
+                    }
+                },
+                load: function (t, e, i) {
+                    var n = this;
+                    setTimeout(function () {
+                        n._load(t, e, i);
+                    }, 0);
+                },
+                _load: function (t, e, i) {
+                    var n = t;
+                    if (!t) {
+                        n = this.protocol + '//' + 
+                            (this.ovr && this.ovr.domain ? this.ovr.domain : 'lptag.liveperson.net') + 
+                            '/tag/tag.js?site=' + this.site;
+                    }
+                    var o = document.createElement('script');
+                    o.setAttribute('charset', e ? e : 'UTF-8');
+                    if (i) o.setAttribute('id', i);
+                    o.setAttribute('src', n);
+                    document.getElementsByTagName('head').item(0).appendChild(o);
+                },
+                init: function () {
+                    this._timing = this._timing || {};
+                    this._timing.start = (new Date()).getTime();
+                    var t = this;
+                    if (window.attachEvent) {
+                        window.attachEvent('onload', function () {
+                            t._domReady('domReady');
+                        });
+                    } else {
+                        window.addEventListener('DOMContentLoaded', function () {
+                            t._domReady('contReady');
+                        }, false);
+                        window.addEventListener('load', function () {
+                            t._domReady('domReady');
+                        }, false);
+                    }
+                    if (typeof window._lptStop === 'undefined') this.load();
+                },
+                start: function () {
+                    this.autoStart = true;
+                },
+                _domReady: function (t) {
+                    if (!this.isDom) {
+                        this.isDom = true;
+                        this.events.trigger('LPT', 'DOM_READY', { t: t });
+                    }
+                    this._timing[t] = (new Date()).getTime();
+                },
+                vars: lpTag.vars || [],
+                dbs: lpTag.dbs || [],
+                ctn: lpTag.ctn || [],
+                sdes: lpTag.sdes || [],
+                hooks: lpTag.hooks || [],
+                identities: lpTag.identities || [],
+                ev: lpTag.ev || []
+            };
+            lpTag.init();
+        } else {
+            window.lpTag._tagCount += 1;
+        }
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticated Space</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #007BFF;
+        }
+
+        .container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome back, valued customer! (Authenticated)</h1>
+        <p>Thank you for logging in. We're here to assist you.</p>
+        <button id="chatbotBtn">Chat with our bot</button>
+        <button id="logoutBtn">Log out</button>
+    </div>
+
+    <!-- LivePerson Chatbot Integration -->
+    <script src="https://lptag.liveperson.net/tag/9994318.js"></script>
+
+    <script>
+        // Check for JWT
+        const jwt = 'https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InB1c2hrYXIuamF0QHRlY2htYWhpbmRyYS5jb20iLCJuYW1lIjoiUHVzaGthciBKYXQiLCJJZCI6IlBKMDAxMDQ3Mjg5In0.LJDKraG69n-PnxR0fj0fEu7GoYULuYvpAUty-9ajjFM';
+        // Check if JWT exists and pass it to LivePerson
+        if (jwt) {
+            // Pass the Bearer token to LivePerson using a custom variable
+            window.lpTag = window.lpTag || {};
+            window.lpTag.vars = window.lpTag.vars || [];
+            
+            window.lpTag.vars.push({
+                scope: 'session', // or 'page' depending on your use case
+                name: 'bearerToken',
+                value: jwt
+            });
+
+            console.log('Bearer token passed to LivePerson:', jwt);
+        } else {
+            console.log('No Bearer token found. Redirecting to login page.');
+            window.location.href = 'index.html';
+        }
+
+        // Capture current page title and cart total value
+        const pageTitle = document.title;
+        const cartTotalValue = 50556; // Placeholder for cart total value, should be dynamically fetched
+
+        // Initialize LivePerson settings and send SDEs
+        window.lpTag = window.lpTag || {};
+        window.lpTag.vars = window.lpTag.vars || [];
+
+        window.lpTag.sdes = window.lpTag.sdes || [];
+        window.lpTag.sdes.push({
+            "type": "cart",
+            "total": cartTotalValue,
+            "currency": "USD",
+            "numItems": 5
+        });
+
+        window.lpTag.vars.push({
+            scope: 'page',
+            name: 'pageTitle',
+            value: pageTitle
+        });
+
+        window.lpTag.vars.push({
+            scope: 'page',
+            name: 'cartTotalValue',
+            value: cartTotalValue
+        });
+
+        // Logout function
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            localStorage.removeItem('jwt');
+            window.location.href = 'index.html';
+        });
+
+        // Chatbot interaction
+        document.getElementById('chatbotBtn').addEventListener('click', function () {
+            console.log('Connecting with chatbot...');
+            // LivePerson API call for chatbot connection
+
+            // connect with bot
+            window.lpTag.taglets.bot = window.lpTag.taglets.bot || {};
+            window.lpTag.taglets.bot.action = 'invite';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Info Widget</title>
+    <style>body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #movie-info-widget {
+        width: 75%;
+        max-width: 450px;
+        margin: 15px auto;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    #movie-info-widget img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    #movie-info-widget h2 {
+        color: #333;
+        font-size: 1.35em;
+    }
+    
+    #movie-info-widget p {
+        color: #555;
+        line-height: 1.5;
+        font-size: 0.85em;
+    }
+    
+    #search-form {
+        margin-bottom: 15px;
+    }
+    
+    #search-form input {
+        padding: 7px;
+        width: 75%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    #search-form button {
+        padding: 7px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    @media (max-width: 600px) {
+        #movie-info-widget {
+            width: 100%;
+            margin: 10px auto;
+            padding: 10px;
+        }
+    
+        #movie-info-widget h2 {
+            font-size: 1.2em;
+        }
+    
+        #movie-info-widget p {
+            font-size: 0.75em;
+        }
+    
+        #search-form input {
+            width: 100%;
+        }
+    
+        #search-form button {
+            width: 100%;
+            margin-top: 8px;
+        }
+    }
+    
+     </style>
+</head>
+<body>
+
+    <div id="movie-info-widget">
+        <form id="search-form">
+            <input type="text" id="movie-name" placeholder="Enter movie name" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="movie-details">
+            <!-- Movie info will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch and render movie data
+        const renderMovie = async (mName) => {
+            let uri = 'https://www.omdbapi.com/?apikey=cf60bf6d&t=';
+            
+            if (mName) {
+                uri += encodeURIComponent(mName); // Encode the movie name for safe URL
+            }
+
+            try {
+                const res = await fetch(uri);
+                const movie = await res.json();
+
+                console.log(res.url); // Log the API URL for debugging
+                console.log(movie); // Log the response for debugging
+
+                if (movie.Response === "True") {
+                    displayMovieData(movie);
+                } else {
+                    document.getElementById('movie-details').innerText = 'Movie not found.';
+                }
+            } catch (error) {
+                console.error('Error fetching movie data:', error);
+                document.getElementById('movie-details').innerText = 'Error fetching movie data.';
+            }
+        };
+
+        // Function to display movie data
+        const displayMovieData = (movie) => {
+            const movieDetailsDiv = document.getElementById('movie-details');
+
+            movieDetailsDiv.innerHTML = `
+                <h2>${movie.Title} (${movie.Year})</h2>
+                <img src="${movie.Poster}" alt="${movie.Title} Poster">
+                <p><strong>Director:</strong> ${movie.Director}</p>
+                <p><strong>Actors:</strong> ${movie.Actors}</p>
+                <p><strong>Plot:</strong> ${movie.Plot}</p>
+                <p><strong>Genre:</strong> ${movie.Genre}</p>
+                <p><strong>IMDb Rating:</strong> ${movie.imdbRating}</p>
+                <p><strong>Rotten Tomatoes:</strong> ${movie.Ratings.find(r => r.Source === 'Rotten Tomatoes').Value}</p>
+            `;
+        };
+
+        // Event listener for the search form
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+            const movieName = document.getElementById('movie-name').value.trim(); // Get the movie name from input
+            if (movieName) {
+                renderMovie(movieName); // Call renderMovie with the movie name
+            }
+        });
+    </script>
+
+</body>
+</html>
