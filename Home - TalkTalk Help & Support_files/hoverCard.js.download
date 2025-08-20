@@ -1,0 +1,132 @@
+/* 
+Hover cards functionality for Lithium Communities
+*/
+
+
+(function($) {
+	common = {
+		profileCard: function(){
+			
+			//START END-USER CONFIGURATION
+			//------------------------------
+			//selectors for hover card triggers
+			var allHoverCardTriggers = $('.authors a, .messageauthorusername a, a.lia-user-name-link, .js-latest-post-by-from a, .user-online-list li a, a.UserAvatar, .ViewProfilePage img.lia-user-avatar-profile, .customUsersOnline a, #authors a').filter(function(){
+				return $(this).parent().parent().is(":not(.user-navigation-settings-dropdown-link)");
+			});
+
+			//unfortunately all environment paths to endpoints are different
+			if(window.location.host=='http://community-stage.talktalk.co.uk'){
+				var userApiUrl = '/eigde79682/plugins/custom/talktalk/eigde79682/profilehovercard?user_id=';
+			} else {
+				var userApiUrl = '/eigde79682/plugins/custom/talktalk/eigde79682/profilehovercard?user_id=';
+			}
+			//------------------------------
+			//STOP END-USER CONFIGURATION
+			
+			
+			if($('.hover-card-container').length<1){
+				$('body').append('<div class="hover-card-container"></div>');
+			}
+			var cardWrapper = $('.hover-card-container');
+			var error = false;
+			var thisUserID = '';
+			var cardTimer;
+			
+			allHoverCardTriggers.on({
+				mouseenter: function() {
+
+					var thisEl = $(this);
+					cardTimer = setTimeout(function(){
+						/* -- GTM event -- */
+						window.dataLayer = window.dataLayer || [];
+						dataLayer.push({
+							'event_category': 'Hovercard',
+							'event_label': 'Hovercard Appears',
+							'event_action': 'display',
+							'event': 'Click'
+						});
+						/* -- END GTM event -- */
+
+						var docWidth = $(document).width();
+						var rightSide = false;
+						
+						//return user id 
+						var userLink = thisEl.attr('href'); 
+						if($('.ViewProfilePage').length && $('img.lia-user-avatar-profile',thisEl).length){
+							var userLink = document.location.href;	
+						} else if(thisEl.attr('href')=='#'){
+							return false;
+						}
+						
+						var thisLen = (userLink).split('/');
+						thisUserID = (thisLen)[thisLen.length-1];
+						var thisCard = $('.profileCard[data-user='+thisUserID+']',cardWrapper);
+						
+						
+						var thisElLeftOffset = Math.round(thisEl.offset().left+(thisEl.width()));
+						var thisElTopOffset = Math.round(thisEl.offset().top+(thisEl.height()/2)-94);
+						
+						if((thisElLeftOffset+387)>=docWidth){
+							//hover card is too far to the right of the screen
+							var thisElLeftOffset = Math.round(thisEl.offset().left-387);
+							rightSide = true;
+						}
+					
+						
+						if(thisCard.length && $('.profileCard[data-user='+thisUserID+'] .preloader',cardWrapper).length<1){					
+							$('.profileCard',cardWrapper).hide();
+							rightSide?thisCard.addClass('rightArrow'):thisCard.removeClass('rightArrow');
+							thisCard.delay(500).css({'top':thisElTopOffset,'left':thisElLeftOffset}).stop().show();
+						} else {
+							var ajaxReturn = '';
+							
+							//just in case
+							thisCard.remove();
+							
+							
+							//hover card wrapper markup
+							var rightArrowClass = rightSide?'rightArrow':'';
+							var profileCardHtml = '<div class="profileCard '+rightArrowClass+'" style="display:block;top:'+thisElTopOffset+'px;left:'+thisElLeftOffset+'px;" data-user="'+thisUserID+'"><div class="inner"><img src="/html/assets/preloader.gif" class="preloader" style="margin:80px auto;display:block;" /></div></div>';
+							
+							$.when(
+								//get the background
+								$.ajax({
+									type: 'GET',
+									url: userApiUrl+thisUserID,
+									dataType: 'html',
+									success: function(data) {
+										$('.profileCard',cardWrapper).hide();
+										ajaxReturn = data;
+									}
+								})
+							)
+							.done(function(){
+								cardWrapper.append(profileCardHtml);							
+								$('.profileCard[data-user='+thisUserID+']',cardWrapper).eq(0).empty().html(ajaxReturn);
+								if($('.profileCard[data-user='+thisUserID+'] .preloader',cardWrapper).length){
+									$('.profileCard[data-user='+thisUserID+'] .preloader',cardWrapper).parents('div.profileCard').remove();
+								}
+							})
+							.fail(function(){
+								//uh oh - bail out!
+								$('.profileCard',cardWrapper).hide();
+							});
+						}
+					},400);
+				}, 
+				mouseleave: function() {
+					clearTimeout(cardTimer);
+					if($('.profileCard[data-user='+thisUserID+']',cardWrapper).length){
+						$('.profileCard[data-user='+thisUserID+']',cardWrapper).delay(500).fadeOut('fast');
+					}
+				}
+			});
+			
+		}
+	}
+	window.common = common;
+	$(document).ready(function() {
+		common.profileCard();
+	});
+})(LITHIUM.jQuery);
+
