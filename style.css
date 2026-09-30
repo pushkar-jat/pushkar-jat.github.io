@@ -516,3 +516,66 @@ a:link {
     color: inherit;
     text-decoration: none;
 }
+/* SKILLS SECTION */
+.skillSection{
+    width: 100%;
+    margin-top: calc(var(--mainThemeSidePadding) * 1.5);
+    word-wrap: break-word;
+}
+.skillHead{
+    margin-left: var(--mainThemeSidePadding);
+    margin-bottom: calc(var(--mainThemeSidePadding) * 0.3);
+    letter-spacing: var(--smallLetterSpacing);
+    word-spacing: var(--largeWordSpacing);
+    font-family: 'GillSans-SemiBold';
+    font-size: var(--secondHeadingText);
+    color: var(--firstHeadingsColor);
+    user-select: none;
+}
+.skill-row{
+    margin: 0 var(--mainThemeSidePadding) calc(var(--ultraSmallSidePadding) * 0.5) calc(var(--mainThemeSidePadding) * 1.3);
+    font-family: 'GillSans-Light';
+    font-weight: bold;
+    color: var(--descriptionColor);
+    font-size: calc(var(--fourthHeadingText) * 0.9);
+    letter-spacing: var(--largeLetterSpacing);
+    word-spacing: var(--largeWordSpacing);
+    line-height: var(--lineHeightSpacing);
+}
+.skill-label{
+    font-family: 'GillSans-SemiBold';
+    color: var(--secondHeadingsColor);
+}
+
+/* EXPERIENCE DETAILS */
+.experience-role,
+.experience-project{
+    margin: 0 0 calc(var(--ultraSmallSidePadding) * 0.4) 0;
+    font-family: 'GillSans-SemiBold';
+    color: var(--secondHeadingsColor);
+    font-size: calc(var(--fourthHeadingText) * 0.95);
+    letter-spacing: var(--largeLetterSpacing);
+    word-spacing: var(--largeWordSpacing);
+}
+.experience-project{
+    font-size: calc(var(--fourthHeadingText) * 0.85);
+    margin-top: calc(var(--ultraSmallSidePadding) * 0.6);
+}
+.experience-points{
+    margin: 0 0 calc(var(--ultraSmallSidePadding) * 0.6) 0;
+    padding-left: 1.2em;
+    font-family: 'GillSans-Light';
+    font-weight: bold;
+    color: var(--descriptionColor);
+    font-size: calc(var(--fourthHeadingText) * 0.9);
+    letter-spacing: var(--largeLetterSpacing);
+    word-spacing: var(--largeWordSpacing);
+    line-height: var(--lineHeightSpacing);
+}
+
+/* EDUCATION SECTION */
+.educationSection{
+    width: 100%;
+    margin-top: calc(var(--mainThemeSidePadding) * 1.5);
+    word-wrap: break-word;
+}
